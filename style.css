@@ -1,4 +1,5 @@
 .table {width: 70%;}
 h1 {font-size: 14pt;}
-h2 {font-size: 12pt;}
+h2 {font-size: 12pt;
+	text-decoration: underline;}
 body {font-size: 11pt;}
