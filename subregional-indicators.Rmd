@@ -1,0 +1,124 @@
+---
+title: "Subregional economic indicators"
+site: bookdown::bookdown_site
+output:
+  html_document2:
+    number_sections: FALSE
+    css: style.css
+    toc: TRUE
+fontsize: 11pt
+linestretch: 1.5
+link-citations: yes
+bibliography: library.bib
+csl: sage-harvard.csl
+---
+
+```{r pnum-setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, message = F, warning = F, error = F, fig.align = "center", fig.pos="ht")
+# knitr::opts_knit$set(root.dir = "H:/LSE/Projects/2018-09-ttwa-overview")
+```
+
+```{r pnum-code, include = F}
+# some code to run here
+```
+
+## UK geographies {-}
+
+Subnational economic indicators are provided for a range of geographies, and not always the same ones.  A brief outline of the major geographical units:
+
+* NUTS hierarchy of geographies: a standardised geography for reporting to Eurostat.  NUTS1 is English regions, Scotland, Wales and Northern Ireland; NUTS2 is combinations of local authority areas; NUTS3 is single unitary local authority areas or combinations of smaller local authority areas (e.g. Bury, Oldham and Rochdale are combined as one NUTS3 area)
+* Combined authorities e.g. Greater Manchester Combined Authority: also referred to as 'city regions' in some publications
+* Local enterprise partnerships: 
+* Travel to Work Areas [^1]: TTWAs have been developed as approximations to self-contained labour markets reflecting areas where most people both live and work.  At least 75% of an area's resident workforce work in the area and at least 75% of the people who work in the area also live in the area. 
+
+[^1]: The area must also have a working population of at least 3,500. However, for areas with a working population in excess of 25,000, self-containment rates as low as 66.7% are accepted.  The 2011 TTWAs number 228. They cover the whole of the UK and were defined in 2015 using 2011 Census commuting flow data, indicating home and workplace address. The TTWAs are based on aggregations of Lower Layer Super Output Areas (LSOA) in England and Wales, Data Zones (DZ) in Scotland, and Super Output Areas (SOA) in Northern Ireland.  From https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography#travel-to-work-area. Detailed guidance at https://ons.maps.arcgis.com/home/item.html?id=379c0cdb374f4f1e94209e908e9a21d9
+
+## Available aggregate economic indicators {-}
+
+Regional accounts:
+
+* Gross Value Added: NUTS1-3, local authority, 1998-2006, broken down by broad industry.  Workplace basis.  Also GVA per head of resident population (but skewed by commuting patterns)
+* Productivity: GVA per hour worked, NUTS1-NUTS3, city regions (combined authorities) and local enterprise partnerships, 2004-2016.  Workplace basis.  Data source: BRES, APS, LFS.  
+* Gross disposable household income per head: income after direct and indirect taxes and transfers.  Covers primary income (from employment and assets) and secondary income (from govt redistribution).  Estimates at current prices.  NUTS 1 to local authority district.  1997-2016.  Residence-based.  Components broken down for all geographies.  
+* International trade: broken down to NUTS3 areas for 2016 for EU / non-EU imports and exports.  Measured in 
+* Investment: gross fixed capital formation by region 2000-2014, but health warning over their reliability
+* Government spending: Doesn't appear to be readily available.  Article produced on regional government expenditure for 1998
+* Household expenditure: household final consumption expenditure.  Data sources: Living Costs and Food Survey, Annual Business Survey.  'Domestic' expenditure is spending in a region; 'national' expenditure is spending by people who live in a region; the difference is the net inter-regional spending.  Only 'national' expenditure is provided per head, as 'domestic' expenditure could be spent by 'foreign' visitors.   Also provides a household savings ratio by deducing regional spending from regional gross income (varies from 1.5% to 14.5%, average 7%).  Experimental estimates for 2016, regions only (released September 2018).  Planning further developments.  
+
+Other useful indicators:
+
+* Innovation: number of patents by geographical area available from Centre for Cities, 2015; also as open data from Intellectual Property Office.  Available at postcode district level.  
+* Earnings: median / mean earnings available from ASHE 1997-2017.  Excludes self-employed.  
+* Employment rates and employment by industry / occupation
+* Regional Economic Analysis from ONS in 2012: industrial specialisation in local areas (using BRES, includes single summary indices of specialisation e.g. Krugman index; and identification of similarities between local authority areas); concentration and distribution of industries; public/private employment
+* Low wage employment: [DETAILS]
+* Graduate jobs indicator via Elias & Purcell or Green & Henseke, based upon Standard Occupational Classification 2010
+* Some analysts also use an indicator for 'knowledge-based industries' based upon Standard Industrial Classification 
+
+## Maps {-}
+
+### Productivity - GVA per hour {-}
+
+```{r}
+source("code/gva-per-hour.R")
+leaflet(mapdata) %>% 
+  addPolygons(fillColor = ~pal(y2016), 
+              weight = 1, 
+              opacity = 1, 
+              color = "white", 
+              fillOpacity=0.7, 
+              label = labels) %>% 
+  addLegend(pal = pal, values = ~y2016, title = "GVA per hour (&pound;), NUTS3 areas",
+            position = "bottomleft", opacity = 0.7)
+```
+
+### GVA per head {-}
+
+```{r}
+source("code/gva-per-head.R")
+leaflet(mapdata) %>% 
+  addPolygons(fillColor = ~pal(X2016), 
+              weight = 1, 
+              opacity = 1, 
+              color = "white", 
+              fillOpacity=0.7, 
+              label = labels) %>% 
+  addLegend(pal = pal, values = ~X2016, title = "GVA per head (&pound;), LA areas",
+            position = "bottomleft", opacity = 0.7)
+```
+
+### Gross disposable household income per head {-}
+
+```{r}
+source("code/gdhi-per-head.R")
+leaflet(mapdata) %>% 
+  addPolygons(fillColor = ~pal(X2016), 
+              weight = 1, 
+              opacity = 1, 
+              color = "white", 
+              fillOpacity=0.7, 
+              label = labels) %>% 
+  addLegend(pal = pal, values = ~X2016, title = "GDHI per head (&pound;), NUTS3 areas",
+            position = "bottomleft", opacity = 0.7)
+```
+
+### Graduate jobs {-}
+
+```{r}
+source("code/grad-jobs-residence.R")
+leaflet(mapdata) %>% 
+  addPolygons(fillColor = ~pal(grad_jobs_pc), 
+              weight = 1, 
+              opacity = 1, 
+              color = "white", 
+              fillOpacity=0.7, 
+              label = labels) %>% 
+  addLegend(pal = pal, 
+            values = ~grad_jobs_pc, 
+            title = "Graduate jobs (% of all in employment, <br> by residence), TTWAs",
+            position = "bottomleft", opacity = 0.7)
+```
+
+
+### Trade {-}
+
