@@ -19,7 +19,8 @@ knitr::opts_chunk$set(echo = F, message = F, warning = F, error = F, fig.align =
 ```
 
 ```{r pnum-code, include = F}
-# some code to run here
+source("code/read-packages.R")
+# source("code/read-boundaries.R")
 ```
 
 A brief introduction to the subregional aggregate economic data available for the UK, comprising an outline of UK geographies, a list of potentially useful indicators, and interactive maps illustrating some of the key statistics across the UK.
@@ -34,14 +35,14 @@ Subnational economic indicators are provided for a range of geographies that is 
 * Local enterprise partnerships: economic development partnerships between local government and local employers; areas are a combination of local authority areas
 * Travel to Work Areas [^1]: TTWAs have been developed as approximations to self-contained labour markets reflecting areas where most people both live and work.  At least 75% of an area's resident workforce work in the area and at least 75% of the people who work in the area also live in the area, based upon findings from the 2011 Census
 
-[^1]: The area must also have a working population of at least 3,500. However, for areas with a working population in excess of 25,000, self-containment rates as low as 66.7% are accepted.  The 2011 TTWAs number 228. They cover the whole of the UK and were defined in 2015 using 2011 Census commuting flow data, indicating home and workplace address. The TTWAs are based on aggregations of Lower Layer Super Output Areas (LSOA) in England and Wales, Data Zones (DZ) in Scotland, and Super Output Areas (SOA) in Northern Ireland.  From https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography#travel-to-work-area. Detailed guidance at https://ons.maps.arcgis.com/home/item.html?id=379c0cdb374f4f1e94209e908e9a21d9
+[^1]: TTWAs must also have a working population of at least 3,500. However, for areas with a working population in excess of 25,000, self-containment rates as low as 66.7% are accepted.  The 2011 TTWAs number 228. They cover the whole of the UK and were defined in 2015 using 2011 Census commuting flow data, indicating home and workplace address. The TTWAs are based on aggregations of Lower Layer Super Output Areas (LSOA) in England and Wales, Data Zones (DZ) in Scotland, and Super Output Areas (SOA) in Northern Ireland.  From https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography#travel-to-work-area. Detailed guidance at https://ons.maps.arcgis.com/home/item.html?id=379c0cdb374f4f1e94209e908e9a21d9
 
 ### Available aggregate economic indicators {-}
 
 Regional accounts:
 
 * Gross Value Added: NUTS1-3, local authority, 1998-2006, broken down by broad industry.  Workplace basis.  Also published as GVA per head of resident population (but this value is skewed by commuting patterns)
-* Productivity: GVA per hour worked, NUTS1-NUTS3, city regions (combined authorities) and local enterprise partnerships, 2004-2016.  Workplace basis.  Data source: BRES, APS, LFS.  
+* Productivity: GVA per hour worked, NUTS1-NUTS3, city regions (combined authorities) and local enterprise partnerships, 2004-2016.  Workplace basis.    
 * Gross disposable household income per head: income after direct and indirect taxes and transfers.  Covers primary income (from employment and assets) and secondary income (from govt redistribution).  Estimates at current prices.  NUTS1 to local authority district.  1997-2016.  Residence-based.  Components broken down for all geographies.  
 * International trade: broken down to NUTS3 areas for 2016 for EU / non-EU imports and exports
 * Investment: gross fixed capital formation by region 2000-2014, but health warning over their reliability
@@ -61,9 +62,13 @@ Other potentially useful indicators:
 
 ### Productivity - GVA per hour {-}
 
+This currently excludes Northern Ireland and some Scottish areas - not sure why. 
+
 ```{r}
 source("code/gva-per-hour.R")
 leaflet(mapdata) %>% 
+  addTiles() %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
   addPolygons(fillColor = ~pal(y2016), 
               weight = 1, 
               opacity = 1, 
@@ -74,11 +79,17 @@ leaflet(mapdata) %>%
             position = "bottomleft", opacity = 0.7)
 ```
 
+Data sources: [Office for National Statistics](https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/labourproductivity/articles/regionalandsubregionalproductivityintheuk/february2018); Business Register and Employment Survey; Annual Population Survey; Labour Force Survey
+
 ### GVA per head {-}
+
+Note that GVA is produced on a workplace basis (i.e. where the work is done) but this is GVA per head of *resident* population.  Consequently it is heavily skewed in areas with a large number of net commuters (e.g. City of London with a large workforce but small resident population).  
 
 ```{r}
 source("code/gva-per-head.R")
 leaflet(mapdata) %>% 
+  addTiles() %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
   addPolygons(fillColor = ~pal(X2016), 
               weight = 1, 
               opacity = 1, 
@@ -89,11 +100,15 @@ leaflet(mapdata) %>%
             position = "bottomleft", opacity = 0.7)
 ```
 
+Source: [Office for National Statistics](https://www.ons.gov.uk/economy/grossvalueaddedgva/datasets/regionalgrossvalueaddedbalancedbylocalauthorityintheuk)
+
 ### Gross disposable household income per head {-}
 
 ```{r}
 source("code/gdhi-per-head.R")
 leaflet(mapdata) %>% 
+  addTiles() %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
   addPolygons(fillColor = ~pal(X2016), 
               weight = 1, 
               opacity = 1, 
@@ -104,11 +119,17 @@ leaflet(mapdata) %>%
             position = "bottomleft", opacity = 0.7)
 ```
 
+Source: [Office for National Statistics](https://www.ons.gov.uk/economy/regionalaccounts/grossdisposablehouseholdincome/bulletins/regionalgrossdisposablehouseholdincomegdhi/1997to2016)
+
 ### Graduate jobs {-}
+
+This currently shows the percentage of people employed in 'graduate' jobs based on location of residence - it should also be possible to produce this based upon location of workplace.  This is for England & Wales only, but similar data should be available from the Scottish and NI Censuses.  
 
 ```{r}
 source("code/grad-jobs-residence.R")
 leaflet(mapdata) %>% 
+  addTiles() %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
   addPolygons(fillColor = ~pal(grad_jobs_pc), 
               weight = 1, 
               opacity = 1, 
@@ -120,3 +141,5 @@ leaflet(mapdata) %>%
             title = "Graduate jobs (% of all in employment, <br> by residence), TTWAs",
             position = "bottomleft", opacity = 0.7)
 ```
+
+Source: Elias & Purcell graduate jobs classification (SOC-HE); [2011 Census](https://www.nomisweb.co.uk/census/2011/ct0347)
