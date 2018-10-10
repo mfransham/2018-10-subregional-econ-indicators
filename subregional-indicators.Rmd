@@ -2,10 +2,12 @@
 title: "Subregional economic indicators"
 site: bookdown::bookdown_site
 output:
-  html_document2:
+  bookdown::html_document2:
     number_sections: FALSE
     css: style.css
     toc: TRUE
+    toc_depth: 3
+    toc_float: true
 fontsize: 11pt
 linestretch: 1.5
 link-citations: yes
@@ -20,12 +22,12 @@ knitr::opts_chunk$set(echo = F, message = F, warning = F, error = F, fig.align =
 
 ```{r pnum-code, include = F}
 source("code/read-packages.R")
-# source("code/read-boundaries.R")
+source("code/read-boundaries.R")
 ```
 
 A brief introduction to the subregional aggregate economic data available for the UK, comprising an outline of UK geographies, a list of potentially useful indicators, and interactive maps illustrating some of the key statistics across the UK.
 
-### UK geographies {-}
+# UK geographies
 
 Subnational economic indicators are provided for a range of geographies that is not necessarily consistent across different datasets.  A brief outline of the major geographical units:
 
@@ -37,7 +39,7 @@ Subnational economic indicators are provided for a range of geographies that is 
 
 [^1]: TTWAs must also have a working population of at least 3,500. However, for areas with a working population in excess of 25,000, self-containment rates as low as 66.7% are accepted.  The 2011 TTWAs number 228. They cover the whole of the UK and were defined in 2015 using 2011 Census commuting flow data, indicating home and workplace address. The TTWAs are based on aggregations of Lower Layer Super Output Areas (LSOA) in England and Wales, Data Zones (DZ) in Scotland, and Super Output Areas (SOA) in Northern Ireland.  From https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography#travel-to-work-area. Detailed guidance at https://ons.maps.arcgis.com/home/item.html?id=379c0cdb374f4f1e94209e908e9a21d9
 
-### Available aggregate economic indicators {-}
+# Available aggregate economic indicators
 
 Regional accounts:
 
@@ -58,9 +60,9 @@ Other potentially useful indicators:
 * Graduate jobs indicator via Elias & Purcell or Green & Henseke, based upon Standard Occupational Classification 2010
 * Some analysts also use an indicator for 'knowledge-based industries' based upon Standard Industrial Classification 
 
-## Maps {-}
+# Maps 
 
-### Productivity - GVA per hour {-}
+## Productivity - GVA per hour 
 
 This currently excludes Northern Ireland and some Scottish areas - not sure why. 
 
@@ -81,7 +83,7 @@ leaflet(mapdata) %>%
 
 Data sources: [Office for National Statistics](https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/labourproductivity/articles/regionalandsubregionalproductivityintheuk/february2018); Business Register and Employment Survey; Annual Population Survey; Labour Force Survey
 
-### GVA per head {-}
+## GVA per head 
 
 Note that GVA is produced on a workplace basis (i.e. where the work is done) but this is GVA per head of *resident* population.  Consequently it is heavily skewed in areas with a large number of net commuters (e.g. City of London with a large workforce but small resident population).  
 
@@ -102,7 +104,7 @@ leaflet(mapdata) %>%
 
 Source: [Office for National Statistics](https://www.ons.gov.uk/economy/grossvalueaddedgva/datasets/regionalgrossvalueaddedbalancedbylocalauthorityintheuk)
 
-### Gross disposable household income per head {-}
+## Gross disposable household income per head 
 
 ```{r}
 source("code/gdhi-per-head.R")
@@ -121,7 +123,7 @@ leaflet(mapdata) %>%
 
 Source: [Office for National Statistics](https://www.ons.gov.uk/economy/regionalaccounts/grossdisposablehouseholdincome/bulletins/regionalgrossdisposablehouseholdincomegdhi/1997to2016)
 
-### Graduate jobs {-}
+## Graduate jobs 
 
 This currently shows the percentage of people employed in 'graduate' jobs based on location of residence - it should also be possible to produce this based upon location of workplace.  This is for England & Wales only, but similar data should be available from the Scottish and NI Censuses.  
 
